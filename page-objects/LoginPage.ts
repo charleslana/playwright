@@ -6,7 +6,7 @@ export class LoginPage {
   readonly usernameInput: Locator;
   readonly passwordInput: Locator;
   readonly loginButton: Locator;
-  readonly alertError: Locator;
+  readonly alert: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -14,9 +14,7 @@ export class LoginPage {
     this.usernameInput = page.locator('#username');
     this.passwordInput = page.locator('#password');
     this.loginButton = page.locator('button');
-    this.alertError = page.locator(
-      '#flash:has-text("Your username is invalid!")'
-    );
+    this.alert = page.locator('#flash');
   }
 
   public async goTo() {
@@ -27,8 +25,14 @@ export class LoginPage {
 
   public async validateLoginError() {
     await this.fillLoginData('user', 'password');
-    await this.alertError.waitFor({ state: 'visible' });
-    expect(this.alertError).toBeVisible();
+    await expect(this.alert).toHaveClass('flash error');
+  }
+
+  public async validateLoginSuccess() {
+    await this.fillLoginData('tomsmith', 'SuperSecretPassword!');
+    await expect(this.page).toHaveURL(
+      'https://the-internet.herokuapp.com/secure'
+    );
   }
 
   private async fillLoginData(username: string, password: string) {

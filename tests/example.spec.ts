@@ -18,4 +18,9 @@ test.describe('Login Page', () => {
     const loginPage = new LoginPage(page);
     await loginPage.validateLoginError();
   });
+
+  test('Should be able to login successfully', async ({ page }) => {
+    const loginPage = new LoginPage(page);
+    await loginPage.validateLoginSuccess();
+  });
 });
